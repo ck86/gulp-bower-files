@@ -1,6 +1,6 @@
 {
   "name": "gulp-bower-files",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Build gulp.src() of your bower packages main files.",
   "main": "index.js",
   "scripts": {
@@ -20,5 +20,13 @@
   },
   "dependencies": {
     "gulp-util": "~2.2.12"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ck86/gulp-bower-files.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ck86/gulp-bower-files/issues"
+  },
+  "homepage": "https://github.com/ck86/gulp-bower-files"
 }
