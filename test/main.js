@@ -11,7 +11,7 @@ describe('gulpBowerFiles()', function () {
         }
     };
 
-    it('description', function (done) {
+    it('should select the expected files', function (done) {
         var stream = gulpBowerFiles(opts);
 
         var expectedFiles = [
