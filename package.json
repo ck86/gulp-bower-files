@@ -1,0 +1,24 @@
+{
+  "name": "gulp-bower-files",
+  "version": "0.1.0",
+  "description": "Build gulp.src() of your bower packages main files.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "gulpplugin",
+    "bower"
+  ],
+  "author": "Christopher Knötschke <cknoetschke@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "~1.17.1",
+    "should": "~3.0.1",
+    "gulp": "~3.4.0",
+    "event-stream": "~3.1.0"
+  },
+  "dependencies": {
+    "gulp-util": "~2.2.12"
+  }
+}

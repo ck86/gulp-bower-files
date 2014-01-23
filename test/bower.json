@@ -1,0 +1,12 @@
+{
+    "dependencies": {
+        "simple": "*",
+        "overwritten": "*",
+        "multi": "*"
+    },
+    "overrides": {
+        "overwritten": {
+            "main": "another.js"
+        }
+    }
+}
