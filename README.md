@@ -22,7 +22,7 @@
 var gulpBowerFiles = require('gulp-bower-files');
 
 gulp.task("bower-files", function(){
-    gulpBowerFiles().pipe(gulp.dest("./vendor"));
+    gulpBowerFiles().pipe(gulp.dest("./lib"));
 });
 ```
 
@@ -38,6 +38,48 @@ You can override the behavior if you add an `overrides` property to your own `bo
     }
 }
 ```
+
+## Example
+
+### gulpfile.js
+
+```javascript
+var gulp = require("gulp");
+var bowerFiles = require("gulp-bower-files");
+
+gulp.task("bowerFiles", function(){
+    bowerFiles().pipe(gulp.dest("./lib"));
+});
+```
+
+### bower.json
+
+```javascript
+{
+  "name": "my-project",
+  "dependencies": {
+    "jquery": "1.10"
+  }
+}
+```
+
+With this `bower.json` it will copy the jquery.js file from your `bower_components` directory to `./lib/jquery/jquery.js`
+
+```javascript
+{
+  "name": "my-project",
+  "dependencies": {
+    "jquery": "1.10"
+  },
+  "overrides": {
+    "jquery": {
+      "main": "jquery.min.js"
+    }
+  }
+}
+```
+
+With this `bower.json` it will copy the jquery.min.js file from your `bower_components` directory to `./lib/jquery/jquery.min.js`
 
 ## LICENSE
 
