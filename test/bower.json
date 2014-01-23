@@ -2,11 +2,15 @@
     "dependencies": {
         "simple": "*",
         "overwritten": "*",
-        "multi": "*"
+        "multi": "*",
+        "ignore": "*"
     },
     "overrides": {
         "overwritten": {
             "main": "another.js"
+        },
+        "ignore": {
+            "ignore": true
         }
     }
 }

@@ -55,6 +55,10 @@ var gulpBowerFiles = function(opts){
             packageJson[dependency] = {}
         }
 
+        if(packageJson[dependency].ignore && packageJson[dependency].ignore === true){
+            continue;
+        }
+
         if(!packageJson[dependency].basePath){
             packageJson[dependency].basePath = path.join(bowerDirectory, "/", dependency)
         }
