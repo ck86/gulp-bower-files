@@ -11,7 +11,7 @@ var readMainFilesFromDependency = function(dependencyConfig) {
                                   path.join(dependencyConfig.basePath, "package.json")]);
 
     if(!jsonPath){
-            throw new PluginError(PLUGIN_NAME, "The bower package " + dependencyConfig.name + " has no bower.json or package.json, use the overrides property in your bower.json");
+        throw new PluginError(PLUGIN_NAME, "The bower package " + dependencyConfig.name + " has no bower.json or package.json, use the overrides property in your bower.json");
     }
     var json = JSON.parse(fs.readFileSync(jsonPath))
     if(!json.main){
@@ -26,10 +26,10 @@ var readMainFilesFromDependency = function(dependencyConfig) {
  * @return {string} First path that exists or null if none exist.
  */
 var firstExistingFile = function(paths) {
-  return paths.reduce(function(prev, curr) {
-    if (prev) return prev;
-    return fs.existsSync(curr)? curr : null;
-  }, null);
+    return paths.reduce(function(prev, curr) {
+        if (prev) return prev;
+        return fs.existsSync(curr)? curr : null;
+    }, null);
 }
 
 
