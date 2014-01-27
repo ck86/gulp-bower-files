@@ -6,6 +6,33 @@ var PluginError = gutil.PluginError
 
 const PLUGIN_NAME = "gulp-bower-files";
 
+var readMainFilesFromDependency = function(dependencyConfig) {
+    jsonPath = firstExistingFile([path.join(dependencyConfig.basePath, "bower.json"), 
+                                  path.join(dependencyConfig.basePath, "package.json")]);
+
+    if(!jsonPath){
+        throw new PluginError(PLUGIN_NAME, "The bower package " + dependencyConfig.name + " has no bower.json or package.json, use the overrides property in your bower.json");
+    }
+    var json = JSON.parse(fs.readFileSync(jsonPath))
+    if(!json.main){
+        throw new PluginError(PLUGIN_NAME, "The bower package " + dependencyConfig.name + " has no main file(s), use the overrides property in your bower.json");
+    }
+    return json.main;
+}
+
+/**
+ * Given a list of paths, return the first path that exists.
+ * @param paths {array[string]} ordered array of paths to check.
+ * @return {string} First path that exists or null if none exist.
+ */
+var firstExistingFile = function(paths) {
+    return paths.reduce(function(prev, curr) {
+        if (prev) return prev;
+        return fs.existsSync(curr)? curr : null;
+    }, null);
+}
+
+
 var addToSrcs = function(srcs, basePath, main){
     if(Array.isArray(main)){
         return main.forEach(function(item){
@@ -55,37 +82,24 @@ var gulpBowerFiles = function(opts){
     var packageJson = bowerJson.overrides || {};
 
     for(var dependency in bowerJson.dependencies){
-        if(!packageJson[dependency]){
-            packageJson[dependency] = {}
-        }
+        var dependencyConfig = packageJson[dependency] || {};
 
-        if(packageJson[dependency].ignore && packageJson[dependency].ignore === true){
+        if(dependencyConfig.ignore === true){
             continue;
         }
 
-        if(!packageJson[dependency].basePath){
-            packageJson[dependency].basePath = path.join(bowerDirectory, "/", dependency)
-        }
+        dependencyConfig.name = dependency;
 
-        if(!packageJson[dependency].main){
-            bowerJsonPath = path.join(packageJson[dependency].basePath, "/", "bower.json");
-            if(!fs.existsSync(bowerJsonPath)){
-                bowerJsonPath = path.join(packageJson[dependency].basePath, "/", ".bower.json");
-                if(!fs.existsSync(bowerJsonPath)){
-                    throw new PluginError(PLUGIN_NAME, "The bower package " + dependency + " has no bower.json, use the overrides property in your bower.json");
-                }
-            }
-            var json = JSON.parse(fs.readFileSync(bowerJsonPath))
-            if(!json.main){
-                throw new PluginError(PLUGIN_NAME, "The bower package " + dependency + " has no main file(s), use the overrides property in your bower.json");
-            }
-            packageJson[dependency].main = json.main
-        }
-
-        addToSrcs(srcs, packageJson[dependency].basePath, packageJson[dependency].main);
+        dependencyConfig.basePath = dependencyConfig.basePath || path.join(bowerDirectory, dependency);
+              
+        dependencyConfig.main = dependencyConfig.main || readMainFilesFromDependency(dependencyConfig);
+        
+        addToSrcs(srcs, dependencyConfig.basePath, dependencyConfig.main);
     }
 
     return gulp.src(srcs);
 }
+
+
 
 module.exports = gulpBowerFiles

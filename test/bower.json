@@ -3,7 +3,8 @@
         "simple": "*",
         "overwritten": "*",
         "multi": "*",
-        "ignore": "*"
+        "ignore": "*",
+        "hasPackageNoBower": "*"
     },
     "overrides": {
         "overwritten": {
