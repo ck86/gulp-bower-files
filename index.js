@@ -35,17 +35,21 @@ var gulpBowerFiles = function(opts){
     }
 
     if(!bowerJsonPath || !fs.existsSync(bowerJsonPath)){
-        throw new PluginError(PLUGIN_NAME, "bower.json file does not exists in.");
+        throw new PluginError(PLUGIN_NAME, "bower.json file does not exist at "+bowerJsonPath);
     }
 
     if(!bowerDirectory || !fs.existsSync(bowerDirectory)){
-        throw new PluginError(PLUGIN_NAME, "Bower components directory does not exists.");
+        throw new PluginError(PLUGIN_NAME, "Bower components directory does not exist at "+bowerDirectory);
     }
 
-    var bowerJson = JSON.parse(fs.readFileSync(bowerJsonPath));
+    try {
+        var bowerJson = JSON.parse(fs.readFileSync(bowerJsonPath));
+    } catch (e) {
+        throw new PluginError(PLUGIN_NAME, "The bower.json file at " + bowerJsonPath + " is not valid JSON. ");
+    }
 
     if(!bowerJson.dependencies){
-        throw new PluginError(PLUGIN_NAME, "The bower.json has no dependencies.");
+        throw new PluginError(PLUGIN_NAME, "The project bower.json has no dependencies listed. This plugin has nothing to do!");
     }
 
     var packageJson = bowerJson.overrides || {};
