@@ -19,9 +19,10 @@ describe('gulpBowerFiles()', function () {
             path.join(__dirname, "/fixtures/overwritten/another.js"),
             path.join(__dirname, "/fixtures/multi/multi.js"),
             path.join(__dirname, "/fixtures/multi/multi.css"),
+            //path.join(__dirname, "/fixtures/hasPackageNoBower/hasPackageNoBower.js")
         ];
 
-        var srcFiles = []
+        var srcFiles = [];
 
         stream.on("end", function(){
             srcFiles.should.be.eql(expectedFiles);
@@ -33,4 +34,19 @@ describe('gulpBowerFiles()', function () {
             callback();
         }));
     });
+
+    it("should throw an exception when bower.json, package.json or ./bower.json's override are not found", function(done) {
+      try {
+        gulpBowerFiles({paths: {
+              bowerJson: __dirname + "/requiresoverride_bower.json",
+              bowerrc: __dirname + "/.bowerrc"
+        }});
+        
+        should.fail("due to lack of configuration.");
+      } catch (e) {
+        e.message.should.containEql("bower package noconfig has no bower.json or package.json"); 
+        done();
+      }
+    });
+
 });
