@@ -19,7 +19,8 @@ describe('gulpBowerFiles()', function () {
             path.join(__dirname, "/fixtures/overwritten/another.js"),
             path.join(__dirname, "/fixtures/multi/multi.js"),
             path.join(__dirname, "/fixtures/multi/multi.css"),
-            path.join(__dirname, "/fixtures/hasPackageNoBower/hasPackageNoBower.js")
+            path.join(__dirname, "/fixtures/hasPackageNoBower/hasPackageNoBower.js"),
+            path.join(__dirname, "/fixtures/decoy/decoy.js")
         ];
 
         var srcFiles = [];
