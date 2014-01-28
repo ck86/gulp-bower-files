@@ -6,7 +6,7 @@ var PluginError = gutil.PluginError
 
 const PLUGIN_NAME = "gulp-bower-files";
 
-var readMainFilesFromDependency = function(dependencyConfig) {
+var loadConfigJson = function(dependencyConfig) {
     jsonPath = firstExistingFile([path.join(dependencyConfig.basePath, "bower.json"), 
                                   path.join(dependencyConfig.basePath, "package.json")]);
 
@@ -17,7 +17,7 @@ var readMainFilesFromDependency = function(dependencyConfig) {
     if(!json.main){
         throw new PluginError(PLUGIN_NAME, "The bower package " + dependencyConfig.name + " has no main file(s), use the overrides property in your bower.json");
     }
-    return json.main;
+    return json;
 }
 
 /**
@@ -33,17 +33,65 @@ var firstExistingFile = function(paths) {
 }
 
 
-var addToSrcs = function(srcs, basePath, main){
-    if(Array.isArray(main)){
-        return main.forEach(function(item){
-            addToSrcs(srcs, basePath, item);
-        });
+var mainPaths = function(basePath, main){
+    if(!Array.isArray(main)){
+        main = [main];
+    }
+    return main.map(function(item) {
+      return path.join(basePath, item);
+    }); 
+}
+
+
+var gatherMainFiles = function(bowerDirectory, bowerJsonPath) {
+    try {
+        var bowerJson = JSON.parse(fs.readFileSync(bowerJsonPath));
+    } catch (e) {
+        throw new PluginError(PLUGIN_NAME, "The bower.json file at " + bowerJsonPath + " is not valid JSON. ");
     }
 
-    var basename = path.basename(main);
-
-    srcs.push(path.join(basePath, "/../", "**", basename));
+    if(!bowerJson.dependencies){
+        throw new PluginError(PLUGIN_NAME, "The project bower.json has no dependencies listed. This plugin has nothing to do!");
+    }
+    
+    var packageJson = bowerJson.overrides || {};
+    var seenPackages = {};
+    return processDependencies(bowerDirectory, packageJson, bowerJson, seenPackages);
 }
+
+var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seenPackages) {
+    var srcs = [];
+    for(var dependency in jsonConfig.dependencies){
+
+        var dependencyConfig = packageJson[dependency] || {};
+
+        if(dependencyConfig.ignore === true || seenPackages[dependency]){
+            continue;
+        }
+
+        dependencyConfig.name = dependency;
+        seenPackages[dependency] = true;
+      
+
+        dependencyConfig.basePath = dependencyConfig.basePath || path.join(bowerDirectory, dependency);
+              
+        var configJson = loadConfigJson(dependencyConfig);
+
+        dependencyConfig.main = dependencyConfig.main || configJson.main;
+
+        
+        var paths = mainPaths(dependencyConfig.basePath, dependencyConfig.main)
+                      .concat(processDependencies(bowerDirectory, packageJson, configJson, seenPackages));
+      
+        srcs = srcs.concat(paths);
+    }
+
+    return srcs;
+}
+
+
+
+
 
 var gulpBowerFiles = function(opts){
     opts = opts || {};
@@ -51,7 +99,6 @@ var gulpBowerFiles = function(opts){
     if(!opts.paths)
         opts.paths = {}
 
-    var srcs = [];
     var bowerJsonPath = opts.paths.bowerJson || "./bower.json";
     var bowerrcPath = opts.paths.bowerrc || "./.bowerrc";
     var bowerDirectory = "./bower_components";
@@ -69,33 +116,7 @@ var gulpBowerFiles = function(opts){
         throw new PluginError(PLUGIN_NAME, "Bower components directory does not exist at "+bowerDirectory);
     }
 
-    try {
-        var bowerJson = JSON.parse(fs.readFileSync(bowerJsonPath));
-    } catch (e) {
-        throw new PluginError(PLUGIN_NAME, "The bower.json file at " + bowerJsonPath + " is not valid JSON. ");
-    }
-
-    if(!bowerJson.dependencies){
-        throw new PluginError(PLUGIN_NAME, "The project bower.json has no dependencies listed. This plugin has nothing to do!");
-    }
-
-    var packageJson = bowerJson.overrides || {};
-
-    for(var dependency in bowerJson.dependencies){
-        var dependencyConfig = packageJson[dependency] || {};
-
-        if(dependencyConfig.ignore === true){
-            continue;
-        }
-
-        dependencyConfig.name = dependency;
-
-        dependencyConfig.basePath = dependencyConfig.basePath || path.join(bowerDirectory, dependency);
-              
-        dependencyConfig.main = dependencyConfig.main || readMainFilesFromDependency(dependencyConfig);
-        
-        addToSrcs(srcs, dependencyConfig.basePath, dependencyConfig.main);
-    }
+    var srcs = gatherMainFiles(bowerDirectory, bowerJsonPath);
 
     return gulp.src(srcs);
 }

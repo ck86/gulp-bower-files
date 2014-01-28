@@ -4,7 +4,8 @@
         "overwritten": "*",
         "multi": "*",
         "ignore": "*",
-        "hasPackageNoBower": "*"
+        "hasPackageNoBower": "*",
+        "deepPathsAndRepeats":"*"
     },
     "overrides": {
         "overwritten": {
