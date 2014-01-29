@@ -6,6 +6,12 @@ var PluginError = gutil.PluginError
 
 const PLUGIN_NAME = "gulp-bower-files";
 
+/**
+ * Attempts to load a configuration for a particular dependency.
+ * Looks in dependencyConfig.basePath for bower.json, then package.json in order returning the first found.
+ * @param {Object} Config containing a .basePath param in which to look for config files
+ * @returns {Object} Parsed JSON file
+ */
 var loadConfigJson = function(dependencyConfig) {
     jsonPath = firstExistingFile([path.join(dependencyConfig.basePath, "bower.json"), 
                                   path.join(dependencyConfig.basePath, "package.json")]);
@@ -43,12 +49,17 @@ var mainPaths = function(basePath, main){
         main = [main];
     }
     return main.map(function(item) {
-			var basename = path.basename(item);
-      return path.join(basePath, "**", item);
+				var basename = path.basename(item);
+				return path.join(basePath, "**", item);
     }); 
 }
 
-
+/**
+ * Finds the main configuration for this project and pulls in overrides.
+ * @param {String} bowerDirectory	Directory bower has downloaded dependencies to (usually bower_components)
+ * @param {String} bowerJsonPath  Path to bower.json file for this project.
+ * @returns {Array} Paths to all dependent main files
+ */
 var gatherMainFiles = function(bowerDirectory, bowerJsonPath) {
     try {
         var bowerJson = JSON.parse(fs.readFileSync(bowerJsonPath));
@@ -65,6 +76,14 @@ var gatherMainFiles = function(bowerDirectory, bowerJsonPath) {
     return processDependencies(bowerDirectory, packageJson, bowerJson, seenPackages);
 }
 
+/**
+ * Reads a config file to find main files and any dependent main files.
+ * @param {String} bowerDirectory   Directory bower has downloaded dependencies to (usually bower_components)
+ * @param {String} packageJson			Local configuration object for entire project
+ * @param {Object} jsonConfig				Parsed JSON object from the config file process
+ * @param {Object} seenPackages			Hash of already included dependencies to prevent cycling
+ * @returns {Array} Paths to this jsonConfig's main file and paths to any main files it depends on
+ */
 var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seenPackages) {
     var srcs = [];
     for(var dependency in jsonConfig.dependencies){
@@ -94,10 +113,6 @@ var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seen
 
     return srcs;
 }
-
-
-
-
 
 var gulpBowerFiles = function(opts){
     opts = opts || {};
@@ -129,7 +144,6 @@ var gulpBowerFiles = function(opts){
 
     return gulp.src(srcs, opts);
 }
-
 
 
 module.exports = gulpBowerFiles

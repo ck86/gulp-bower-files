@@ -6,38 +6,38 @@ var should = require("should");
 describe('gulpBowerFiles()', function () {
     
     function streamFromConfig(path) { 
-            return gulpBowerFiles({paths: {
-                  bowerJson: __dirname + path,
-                  bowerrc: __dirname + "/.bowerrc"
-            }});
+				return gulpBowerFiles({paths: {
+							bowerJson: __dirname + path,
+							bowerrc: __dirname + "/.bowerrc"
+				}});
     }
 
     function expect(filenames) {
-      var expectedFiles = [].concat(filenames).map(function(filename) {
-          return path.join(__dirname, filename);
-      });
-      function run(path, done) {
-          var stream = streamFromConfig(path);
-          var srcFiles = [];
+				var expectedFiles = [].concat(filenames).map(function(filename) {
+						return path.join(__dirname, filename);
+				});
+				function run(path, done) {
+						var stream = streamFromConfig(path);
+						var srcFiles = [];
 
-          stream.on("end", function(){
-              srcFiles.should.be.eql(expectedFiles);
-              done();
-          });
+						stream.on("end", function(){
+								srcFiles.should.be.eql(expectedFiles);
+								done();
+						});
 
-          stream.pipe(es.map(function(file, callback){
-              srcFiles.push(file.path);
-              callback();
-          }));
-      }
-        
-      return {
-        fromConfig: function(path) {
-            return {
-              when: function(done) { run(path, done); }
-            }
-        }
-      }
+						stream.pipe(es.map(function(file, callback){
+								srcFiles.push(file.path);
+								callback();
+						}));
+				}
+					
+				return {
+						fromConfig: function(path) {
+								return {
+									when: function(done) { run(path, done); }
+								}
+						}
+				}
     }
 
     it('should select the expected files', function (done) {
