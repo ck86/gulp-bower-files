@@ -5,7 +5,7 @@
         "multi": "*",
         "ignore": "*",
         "hasPackageNoBower": "*",
-        "deepPathsAndRepeats":"*",
+        "deepPaths":"*",
         "decoy": "*"
     },
     "overrides": {
