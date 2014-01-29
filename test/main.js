@@ -47,7 +47,8 @@ describe('gulpBowerFiles()', function () {
             "/fixtures/multi/multi.js",
             "/fixtures/multi/multi.css",
             "/fixtures/hasPackageNoBower/hasPackageNoBower.js",
-            "/fixtures/deepPathsAndRepeats/lib/deeppathsandrepeats.js"
+            "/fixtures/deepPathsAndRepeats/lib/deeppathsandrepeats.js",
+						"/fixtures/decoy/decoy.js"
         ]).fromConfig("/bower.json")
           .when(done);
     });

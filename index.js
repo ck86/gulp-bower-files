@@ -32,13 +32,19 @@ var firstExistingFile = function(paths) {
     }, null);
 }
 
-
+/**
+ * Adding glob path to the srcs array
+ * @param {Array}           srcs        The srcs array
+ * @param {String}          basePath    Base path to the bower component
+ * @param {Array|String}    main        Path to the main file(s)
+ */
 var mainPaths = function(basePath, main){
     if(!Array.isArray(main)){
         main = [main];
     }
     return main.map(function(item) {
-      return path.join(basePath, item);
+			var basename = path.basename(item);
+      return path.join(basePath, "**", item);
     }); 
 }
 
@@ -116,9 +122,12 @@ var gulpBowerFiles = function(opts){
         throw new PluginError(PLUGIN_NAME, "Bower components directory does not exist at "+bowerDirectory);
     }
 
+    if(!opts.base)
+        opts.base = bowerDirectory;
+
     var srcs = gatherMainFiles(bowerDirectory, bowerJsonPath);
 
-    return gulp.src(srcs);
+    return gulp.src(srcs, opts);
 }
 
 
