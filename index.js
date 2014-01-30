@@ -4,7 +4,7 @@ var gulp = require("gulp");
 var gutil = require("gulp-util");
 var PluginError = gutil.PluginError
 
-const PLUGIN_NAME = "gulp-bowerfiles";
+const PLUGIN_NAME = "gulp-bower-files";
 
 /**
  * Attempts to load a configuration for a particular dependency.
