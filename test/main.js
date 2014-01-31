@@ -5,19 +5,24 @@ var should = require("should");
 
 describe('gulpBowerFiles()', function () {
     
-    function streamFromConfig(path) { 
-				return gulpBowerFiles({paths: {
-							bowerJson: __dirname + path,
-							bowerrc: __dirname + "/.bowerrc"
-				}});
+    function streamFromConfig(path, includeDev) { 
+        if (!includeDev)
+            includeDev = false;
+		return gulpBowerFiles({
+            paths: {
+					bowerJson: __dirname + path,
+					bowerrc: __dirname + "/.bowerrc"
+                },
+            includeDev: includeDev
+        });
     }
 
     function expect(filenames) {
 				var expectedFiles = [].concat(filenames).map(function(filename) {
 						return path.join(__dirname, filename);
 				});
-				function run(path, done) {
-						var stream = streamFromConfig(path);
+				function run(path, includeDev, done) {
+						var stream = streamFromConfig(path, includeDev);
 						var srcFiles = [];
 
 						stream.on("end", function(){
@@ -32,9 +37,9 @@ describe('gulpBowerFiles()', function () {
 				}
 					
 				return {
-						fromConfig: function(path) {
+						fromConfig: function(path, includeDev) {
 								return {
-									when: function(done) { run(path, done); }
+									when: function(done) { run(path, includeDev, done); }
 								}
 						}
 				}
@@ -48,7 +53,7 @@ describe('gulpBowerFiles()', function () {
             "/fixtures/multi/multi.css",
             "/fixtures/hasPackageNoBower/hasPackageNoBower.js",
             "/fixtures/deepPaths/lib/deeppaths.js",
-						"/fixtures/decoy/decoy.js"
+			"/fixtures/decoy/decoy.js"
         ]).fromConfig("/bower.json")
           .when(done);
     });
@@ -77,6 +82,14 @@ describe('gulpBowerFiles()', function () {
             "/fixtures/cyclic-a/cyclic-a.js",
             "/fixtures/cyclic-b/cyclic-b.js"
         ]).fromConfig("/cyclic_bower.json")
+          .when(done);    
+    });
+
+    it("should get devDependencies", function(done) {
+        expect([
+            "/fixtures/simple/simple.js",
+            "/fixtures/includeDev/includeDev.js"
+        ]).fromConfig("/includedev_bower.json", true)
           .when(done);    
     });
 });

@@ -60,7 +60,7 @@ var mainPaths = function(basePath, main){
  * @param {String} bowerJsonPath  Path to bower.json file for this project.
  * @returns {Array} Paths to all dependent main files
  */
-var gatherMainFiles = function(bowerDirectory, bowerJsonPath) {
+var gatherMainFiles = function(bowerDirectory, bowerJsonPath, includeDev) {
     try {
         var bowerJson = JSON.parse(fs.readFileSync(bowerJsonPath));
     } catch (e) {
@@ -73,7 +73,7 @@ var gatherMainFiles = function(bowerDirectory, bowerJsonPath) {
     
     var packageJson = bowerJson.overrides || {};
     var seenPackages = {};
-    return processDependencies(bowerDirectory, packageJson, bowerJson, seenPackages);
+    return processDependencies(bowerDirectory, packageJson, bowerJson, seenPackages, includeDev);
 }
 
 /**
@@ -84,9 +84,20 @@ var gatherMainFiles = function(bowerDirectory, bowerJsonPath) {
  * @param {Object} seenPackages			Hash of already included dependencies to prevent cycling
  * @returns {Array} Paths to this jsonConfig's main file and paths to any main files it depends on
  */
-var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seenPackages) {
+var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seenPackages, includeDev) {
     var srcs = [];
-    for(var dependency in jsonConfig.dependencies){
+    function mergeObjects(obj1,obj2){
+        var obj3 = {};
+        for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+        for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+        return obj3;
+    }
+    if (includeDev){
+        dependencies = mergeObjects(jsonConfig.dependencies, jsonConfig.devDependencies);
+    } else{
+        dependencies = jsonConfig.dependencies;
+    }
+    for(var dependency in dependencies){
 
         var dependencyConfig = packageJson[dependency] || {};
 
@@ -96,7 +107,6 @@ var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seen
 
         dependencyConfig.name = dependency;
         seenPackages[dependency] = true;
-      
 
         dependencyConfig.basePath = dependencyConfig.basePath || path.join(bowerDirectory, dependency);
               
@@ -140,7 +150,10 @@ var gulpBowerFiles = function(opts){
     if(!opts.base)
         opts.base = bowerDirectory;
 
-    var srcs = gatherMainFiles(bowerDirectory, bowerJsonPath);
+    if(!opts.includeDev)
+        opts.includeDev = false;
+
+    var srcs = gatherMainFiles(bowerDirectory, bowerJsonPath, opts.includeDev);
 
     return gulp.src(srcs, opts);
 }
