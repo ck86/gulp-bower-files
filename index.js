@@ -13,16 +13,21 @@ const PLUGIN_NAME = "gulp-bower-files";
  * @returns {Object} Parsed JSON file
  */
 var loadConfigJson = function(dependencyConfig) {
-    jsonPath = firstExistingFile([path.join(dependencyConfig.basePath, "bower.json"), 
-                                  path.join(dependencyConfig.basePath, "package.json")]);
+    jsonPath = firstExistingFile([
+        path.join(dependencyConfig.basePath, "bower.json"), 
+        path.join(dependencyConfig.basePath, "package.json")
+    ]);
 
     if(!jsonPath){
         throw new PluginError(PLUGIN_NAME, "The bower package " + dependencyConfig.name + " has no bower.json or package.json, use the overrides property in your bower.json");
     }
+
     var json = JSON.parse(fs.readFileSync(jsonPath))
+
     if(!json.main){
         throw new PluginError(PLUGIN_NAME, "The bower package " + dependencyConfig.name + " has no main file(s), use the overrides property in your bower.json");
     }
+    
     return json;
 }
 
@@ -49,14 +54,14 @@ var mainPaths = function(basePath, main){
         main = [main];
     }
     return main.map(function(item) {
-				var basename = path.basename(item);
-				return path.join(basePath, "**", item);
+        var basename = path.basename(item);
+        return path.join(basePath, "**", item);
     }); 
 }
 
 /**
  * Finds the main configuration for this project and pulls in overrides.
- * @param {String} bowerDirectory	Directory bower has downloaded dependencies to (usually bower_components)
+ * @param {String} bowerDirectory   Directory bower has downloaded dependencies to (usually bower_components)
  * @param {String} bowerJsonPath  Path to bower.json file for this project.
  * @returns {Array} Paths to all dependent main files
  */
@@ -79,9 +84,9 @@ var gatherMainFiles = function(bowerDirectory, bowerJsonPath, includeDev) {
 /**
  * Reads a config file to find main files and any dependent main files.
  * @param {String} bowerDirectory   Directory bower has downloaded dependencies to (usually bower_components)
- * @param {String} packageJson			Local configuration object for entire project
- * @param {Object} jsonConfig				Parsed JSON object from the config file process
- * @param {Object} seenPackages			Hash of already included dependencies to prevent cycling
+ * @param {String} packageJson          Local configuration object for entire project
+ * @param {Object} jsonConfig               Parsed JSON object from the config file process
+ * @param {Object} seenPackages         Hash of already included dependencies to prevent cycling
  * @returns {Array} Paths to this jsonConfig's main file and paths to any main files it depends on
  */
 var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seenPackages, includeDev) {
@@ -116,7 +121,7 @@ var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seen
 
         
         var paths = mainPaths(dependencyConfig.basePath, dependencyConfig.main)
-                      .concat(processDependencies(bowerDirectory, packageJson, configJson, seenPackages));
+                    .concat(processDependencies(bowerDirectory, packageJson, configJson, seenPackages));
       
         srcs = srcs.concat(paths);
     }
