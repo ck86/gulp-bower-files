@@ -8,14 +8,17 @@ const PLUGIN_NAME = "gulp-bower-files";
 
 /**
  * Attempts to load a configuration for a particular dependency.
- * Looks in dependencyConfig.basePath for bower.json, then package.json in order returning the first found.
+ * Looks in dependencyConfig.basePath for .bower.json, bower.json, 
+ * package.json, then component.json in order returning the first found.
  * @param {Object} Config containing a .basePath param in which to look for config files
  * @returns {Object} Parsed JSON file
  */
 var loadConfigJson = function(dependencyConfig) {
     jsonPath = firstExistingFile([
-        path.join(dependencyConfig.basePath, "bower.json"), 
-        path.join(dependencyConfig.basePath, "package.json")
+        path.join(dependencyConfig.basePath, ".bower.json"),
+        path.join(dependencyConfig.basePath, "bower.json"),
+        path.join(dependencyConfig.basePath, "package.json"),
+        path.join(dependencyConfig.basePath, "component.json")
     ]);
 
     if(!jsonPath){
