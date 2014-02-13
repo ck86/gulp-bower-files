@@ -27,7 +27,7 @@ var loadConfigJson = function(dependencyConfig) {
 
     var json = JSON.parse(fs.readFileSync(jsonPath))
 
-    if(!json.main&&!dependencyConfig.main){
+    if(!json.main && !dependencyConfig.main){
         throw new PluginError(PLUGIN_NAME, "The bower package " + dependencyConfig.name + " has no main file(s), use the overrides property in your bower.json");
     }
     
