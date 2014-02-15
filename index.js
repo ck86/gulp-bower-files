@@ -58,7 +58,7 @@ var mainPaths = function(basePath, main){
     }
     return main.map(function(item) {
         var basename = path.basename(item);
-        return path.join(basePath, "**", item);
+        return path.join(basePath, item);
     }); 
 }
 
