@@ -1,6 +1,6 @@
 {
   "name": "gulp-bower-files",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Build gulp.src() of your bower packages main files.",
   "main": "index.js",
   "scripts": {
