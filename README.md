@@ -81,6 +81,22 @@ With this `bower.json` it will copy the jquery.js file from your `bower_componen
 
 With this `bower.json` it will copy the jquery.min.js file from your `bower_components` directory to `./lib/jquery/jquery.min.js`
 
+```javascript
+{
+  "name": "my-project",
+  "dependencies": {
+    "jquery": "1.10"
+  },
+  "overrides": {
+    "jquery": {
+      "ignore": true
+    }
+  }
+}
+```
+
+You can also ignore components like this.
+
 ## LICENSE
 
 (MIT License)
