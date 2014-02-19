@@ -72,15 +72,15 @@ describe('gulpBowerFiles()', function () {
 
     it("should recurse through dependencies pulling in their dependencies", function(done) {
         expect([
-            "/fixtures/recursive/recursive.js",
-            "/fixtures/simple/simple.js"
+            "/fixtures/simple/simple.js",
+            "/fixtures/recursive/recursive.js"
         ]).fromConfig("/recursive_bower.json").when(done);
     });
 
     it("should not get hungup on cyclic dependencies", function(done) {
         expect([
-            "/fixtures/cyclic-a/cyclic-a.js",
-            "/fixtures/cyclic-b/cyclic-b.js"
+            "/fixtures/cyclic-b/cyclic-b.js",
+            "/fixtures/cyclic-a/cyclic-a.js"
         ]).fromConfig("/cyclic_bower.json").when(done);    
     });
 

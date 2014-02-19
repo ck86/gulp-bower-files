@@ -123,8 +123,8 @@ var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seen
         dependencyConfig.main = dependencyConfig.main || configJson.main;
 
         
-        var paths = mainPaths(dependencyConfig.basePath, dependencyConfig.main)
-                    .concat(processDependencies(bowerDirectory, packageJson, configJson, seenPackages));
+        var paths = processDependencies(bowerDirectory, packageJson, configJson, seenPackages)
+                    .concat(mainPaths(dependencyConfig.basePath, dependencyConfig.main));
       
         srcs = srcs.concat(paths);
     }
