@@ -22,6 +22,10 @@ var loadConfigJson = function(dependencyConfig) {
     ]);
 
     if(!jsonPath){
+        if(dependencyConfig.main){
+            return dependencyConfig;
+        }
+        
         throw new PluginError(PLUGIN_NAME, "The bower package " + dependencyConfig.name + " has no bower.json or package.json, use the overrides property in your bower.json");
     }
 
