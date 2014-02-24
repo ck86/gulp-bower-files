@@ -140,7 +140,7 @@ var gulpBowerFiles = function(opts){
 
     var bowerJsonPath = opts.paths.bowerJson || "./bower.json";
     var bowerrcPath = opts.paths.bowerrc || "./.bowerrc";
-    var bowerDirectory = "./bower_components";
+    var bowerDirectory = opts.paths.bowerDirectory || "./bower_components";
 
     if(fs.existsSync(bowerrcPath)){
         bowerDirectory = path.dirname(bowerrcPath);
