@@ -90,4 +90,17 @@ describe('gulpBowerFiles()', function () {
             "/fixtures/includeDev/includeDev.js"
         ]).fromConfig("/includedev_bower.json", true).when(done);    
     });
+
+    it("should not load any deeper dependencies", function(done) {
+        expect([
+            "/fixtures/recursive/recursive.js"
+        ]).fromConfig("/dependencies_bower.json").when(done);
+    });
+
+    it("should load other dependencies than defined", function(done) {
+        expect([
+            "/fixtures/decoy/decoy.js",
+            "/fixtures/recursive/recursive.js"
+        ]).fromConfig("/other_dependencies_bower.json").when(done);
+    });
 });

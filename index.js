@@ -91,26 +91,28 @@ var gatherMainFiles = function(bowerDirectory, bowerJsonPath, includeDev) {
 /**
  * Reads a config file to find main files and any dependent main files.
  * @param {String} bowerDirectory   Directory bower has downloaded dependencies to (usually bower_components)
- * @param {String} packageJson          Local configuration object for entire project
- * @param {Object} jsonConfig               Parsed JSON object from the config file process
- * @param {Object} seenPackages         Hash of already included dependencies to prevent cycling
- * @returns {Array} Paths to this jsonConfig's main file and paths to any main files it depends on
+ * @param {String} packageJson      Local configuration object for entire project
+ * @param {Object} jsonConfig       Parsed JSON object from the config file process
+ * @param {Object} seenPackages     Hash of already included dependencies to prevent cycling
+ * @returns {Array}                 Paths to this jsonConfig's main file and paths to any main files it depends on
  */
 var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seenPackages, includeDev) {
     var srcs = [];
+
     function mergeObjects(obj1,obj2){
         var obj3 = {};
         for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
         for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
         return obj3;
     }
+
     if (includeDev){
         dependencies = mergeObjects(jsonConfig.dependencies, jsonConfig.devDependencies);
     } else{
         dependencies = jsonConfig.dependencies;
     }
-    for(var dependency in dependencies){
 
+    for(var dependency in dependencies){
         var dependencyConfig = packageJson[dependency] || {};
 
         if(dependencyConfig.ignore === true || seenPackages[dependency]){
@@ -126,6 +128,9 @@ var processDependencies = function(bowerDirectory, packageJson, jsonConfig, seen
 
         dependencyConfig.main = dependencyConfig.main || configJson.main;
 
+        if(typeof dependencyConfig.dependencies !== "undefined"){
+            configJson.dependencies = dependencyConfig.dependencies;
+        }
         
         var paths = processDependencies(bowerDirectory, packageJson, configJson, seenPackages)
                     .concat(mainPaths(dependencyConfig.basePath, dependencyConfig.main));
