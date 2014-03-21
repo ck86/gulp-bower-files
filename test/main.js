@@ -28,7 +28,7 @@ describe('gulpBowerFiles()', function () {
             var srcFiles = [];
 
             stream.on("end", function(){
-                srcFiles.should.be.eql(expectedFiles);
+                expectedFiles.should.be.eql(srcFiles);
                 done();
             });
 
@@ -56,51 +56,46 @@ describe('gulpBowerFiles()', function () {
             "/fixtures/hasPackageNoBower/hasPackageNoBower.js",
             "/fixtures/deepPaths/lib/deeppaths.js",
             "/fixtures/decoy/decoy.js"
-        ]).fromConfig("/bower.json").when(done);
+        ]).fromConfig("/_bower.json").when(done);
     });
 
-    it("should throw an exception when bower.json, package.json or ./bower.json's override are not found", function(done) {
-        try {
-            streamFromConfig("/requiresoverride_bower.json");
-            
-            should.fail("due to lack of configuration.");
-        } catch (e) {
-            e.message.should.containEql("bower package noconfig has no bower.json or package.json"); 
-            done();
-        }
+    it("should ignore packages without any json files", function(done) {
+        expect([
+            "/fixtures/simple/simple.js"
+        ]).fromConfig("/_nojson_bower.json").when(done);
     });
 
     it("should recurse through dependencies pulling in their dependencies", function(done) {
         expect([
             "/fixtures/simple/simple.js",
             "/fixtures/recursive/recursive.js"
-        ]).fromConfig("/recursive_bower.json").when(done);
+        ]).fromConfig("/_recursive_bower.json").when(done);
     });
 
     it("should not get hungup on cyclic dependencies", function(done) {
         expect([
+            "/fixtures/cyclic-a/cyclic-a.js",
             "/fixtures/cyclic-b/cyclic-b.js",
-            "/fixtures/cyclic-a/cyclic-a.js"
-        ]).fromConfig("/cyclic_bower.json").when(done);    
+        ]).fromConfig("/_cyclic_bower.json").when(done);    
     });
 
     it("should get devDependencies", function(done) {
         expect([
             "/fixtures/simple/simple.js",
             "/fixtures/includeDev/includeDev.js"
-        ]).fromConfig("/includedev_bower.json", true).when(done);    
+        ]).fromConfig("/_includedev_bower.json", true).when(done);    
     });
 
     it("should not load any deeper dependencies", function(done) {
         expect([
             "/fixtures/recursive/recursive.js"
-        ]).fromConfig("/dependencies_bower.json").when(done);
+        ]).fromConfig("/_dependencies_bower.json").when(done);
     });
 
     it("should load other dependencies than defined", function(done) {
         expect([
             "/fixtures/decoy/decoy.js",
             "/fixtures/recursive/recursive.js"
-        ]).fromConfig("/other_dependencies_bower.json").when(done);
+        ]).fromConfig("/_other_dependencies_bower.json").when(done);
     });
 });
