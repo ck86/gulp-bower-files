@@ -38,12 +38,12 @@ module.exports = function(opts){
 
     try {
         var manager = new PackageManager(opts);
-        manager.collectPackages(opts);
-        var srcs = manager.getSrcs();
+        manager.collectPackages();
+        var files = manager.getFiles();
     } catch(e) {
         throw e;
         throw new PluginError(PLUGIN_NAME, e.message);
     }
 
-    return gulp.src(srcs, opts);
+    return gulp.src(files, opts);
 }
