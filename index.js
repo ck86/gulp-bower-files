@@ -1,9 +1,9 @@
-var fs = require("fs");
-var path = require("path");
-var gulp = require("gulp");
-var gutil = require("gulp-util");
-var PluginError = gutil.PluginError
-var PackageManager = require("./lib/package_collection");
+var fs              = require("fs");
+var path            = require("path");
+var gulp            = require("gulp");
+var gutil           = require("gulp-util");
+var PluginError     = gutil.PluginError
+var PackageManager  = require("./lib/package_collection");
 
 const PLUGIN_NAME = "gulp-bower-files";
 

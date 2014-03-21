@@ -14,7 +14,8 @@ describe('gulpBowerFiles()', function () {
                 bowerJson: __dirname + path,
                 bowerrc: __dirname + "/.bowerrc"
             },
-            includeDev: includeDev
+            includeDev: includeDev,
+            debugging: true
         });
     }
 
