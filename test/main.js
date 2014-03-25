@@ -5,18 +5,15 @@ var should = require("should");
 
 describe('gulpBowerFiles()', function () {
     
-    function streamFromConfig(path, includeDev) { 
-        if (!includeDev)
-            includeDev = false;
+    function streamFromConfig(path, options) { 
+        options = options || {};
+
+        options.paths = {
+            bowerJson: __dirname + path,
+            bowerrc: __dirname + "/.bowerrc"
+        };
         
-        return gulpBowerFiles({
-            paths: {
-                bowerJson: __dirname + path,
-                bowerrc: __dirname + "/.bowerrc"
-            },
-            includeDev: includeDev,
-            debugging: true
-        });
+        return gulpBowerFiles(options);
     }
 
     function expect(filenames) {
@@ -24,8 +21,8 @@ describe('gulpBowerFiles()', function () {
             return path.join(__dirname, filename);
         });
 
-        function run(path, includeDev, done) {
-            var stream = streamFromConfig(path, includeDev);
+        function run(path, options, done) {
+            var stream = streamFromConfig(path, options);
             var srcFiles = [];
 
             stream.on("end", function(){
@@ -40,9 +37,9 @@ describe('gulpBowerFiles()', function () {
         }
             
         return {
-            fromConfig: function(path, includeDev) {
+            fromConfig: function(path, options) {
                 return {
-                    when: function(done) { run(path, includeDev, done); }
+                    when: function(done) { run(path, options, done); }
                 }
             }
         }
@@ -66,6 +63,13 @@ describe('gulpBowerFiles()', function () {
         ]).fromConfig("/_nojson_bower.json").when(done);
     });
 
+    it("should select files per default", function(done) {
+        expect([
+            "/fixtures/noconfig/noconfig.js",
+            "/fixtures/simple/simple.js"
+        ]).fromConfig("/_nojson_bower.json", { main: "./**/*.js" }).when(done);
+    });
+
     it("should recurse through dependencies pulling in their dependencies", function(done) {
         expect([
             "/fixtures/simple/simple.js",
@@ -84,7 +88,7 @@ describe('gulpBowerFiles()', function () {
         expect([
             "/fixtures/simple/simple.js",
             "/fixtures/includeDev/includeDev.js"
-        ]).fromConfig("/_includedev_bower.json", true).when(done);    
+        ]).fromConfig("/_includedev_bower.json", { includeDev: true }).when(done);    
     });
 
     it("should not load any deeper dependencies", function(done) {
