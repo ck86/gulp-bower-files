@@ -63,7 +63,7 @@ describe('gulpBowerFiles()', function () {
         ]).fromConfig("/_nojson_bower.json").when(done);
     });
 
-    it("should select files per default", function(done) {
+    it("should select files via default option", function(done) {
         expect([
             "/fixtures/noconfig/noconfig.js",
             "/fixtures/simple/simple.js"
@@ -102,5 +102,19 @@ describe('gulpBowerFiles()', function () {
             "/fixtures/decoy/decoy.js",
             "/fixtures/recursive/recursive.js"
         ]).fromConfig("/_other_dependencies_bower.json").when(done);
+    });
+
+    it("should select prod.js on prod environment", function(done) {
+        process.env.NODE_ENV = "prod";
+        expect([
+            "/fixtures/envBased/prod.js"
+        ]).fromConfig("/_env_based_bower.json").when(done);
+    });
+
+    it("should select dev.js on dev environment", function(done) {
+        process.env.NODE_ENV = "dev";
+        expect([
+            "/fixtures/envBased/dev.js"
+        ]).fromConfig("/_env_based_bower.json").when(done);
     });
 });
