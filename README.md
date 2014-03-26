@@ -3,8 +3,9 @@
 ## Information
 
 <table>
-<tr> 
-<td>Package</td><td>gulp-bower-files</td>
+<tr>
+<td>Package</td>
+<td>gulp-bower-files</td>
 </tr>
 <tr>
 <td>Description</td>
@@ -29,73 +30,78 @@ gulp.task("bower-files", function(){
 This will read your `bower.json`, iterate through your dependencies and build a `gulp.src()` with all files defined in the main property of the packages `bower.json`.
 You can override the behavior if you add an `overrides` property to your own `bower.json`. E.g.:
 
+## Options
+
+### Overrides Options
+
+These options can be set directly in your `bower.json` file, e.g.:
+
 ```json
 {
+    "name": "your-package-name",
+    "dependencies": {
+        "BOWER-PACKAGE": "*"
+    },
     "overrides": {
         "BOWER-PACKAGE": {
-            "main": "another.js"
+            // Here you can override the main files or ignoring this package, for more info see options
         }
     }
 }
 ```
 
-## Example
+#### main
 
-### gulpfile.js
+Type: `String`or `Array` or `Object`
 
-```javascript
-var gulp = require("gulp");
-var bowerFiles = require("gulp-bower-files");
+You can specify which files should be selected. You can `gulp-bower-files` select files based on the `process.env.NODE_ENV` if you provide an `Object` with `keys` as the environment, e.g.:
 
-gulp.task("bowerFiles", function(){
-    bowerFiles().pipe(gulp.dest("./lib"));
-});
-```
-
-### bower.json
-
-```javascript
+```json
 {
-  "name": "my-project",
-  "dependencies": {
-    "jquery": "1.10"
-  }
-}
-```
-
-With this `bower.json` it will copy the jquery.js file from your `bower_components` directory to `./lib/jquery/jquery.js`
-
-```javascript
-{
-  "name": "my-project",
-  "dependencies": {
-    "jquery": "1.10"
-  },
-  "overrides": {
-    "jquery": {
-      "main": "jquery.min.js"
+    "overrides": {
+        "BOWER-PACKAGE": {
+            "main": {
+                "development": "file.js",
+                "production": "file.min.js",
+            }
+        }
     }
-  }
 }
 ```
 
-With this `bower.json` it will copy the jquery.min.js file from your `bower_components` directory to `./lib/jquery/jquery.min.js`
+#### ignore
 
-```javascript
-{
-  "name": "my-project",
-  "dependencies": {
-    "jquery": "1.10"
-  },
-  "overrides": {
-    "jquery": {
-      "ignore": true
-    }
-  }
-}
-```
+Type: `Boolean` Default: `false`
 
-You can also ignore components like this.
+Set to `true` if you want to ignore this package.
+
+#### dependencies
+
+Type: `Object`
+
+You can override the dependencies of a package. Set to `null` to ignore the dependencies.
+
+### Common Options
+
+These options can be passed to this plugin, e.g: `bowerFiles(/* options*/)`
+
+#### debugging
+
+Type: `boolean` Default: `false`
+
+Set to `true` to enable debugging output.
+
+#### main
+
+Type: `String` or `Array` or `Object` Default: `null`
+
+You can specify for all packages a default main property which will be used if the package does not provide a main property.
+
+#### env
+
+Type: `String` Default: `process.env.NODE_ENV`
+
+If `process.env.NODE_ENV` is not set you can use this option.
 
 ## LICENSE
 
