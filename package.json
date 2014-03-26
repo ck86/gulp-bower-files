@@ -13,13 +13,13 @@
   "author": "Christopher Knötschke <cknoetschke@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "~1.17.1",
-    "should": "~3.0.1",
-    "gulp": "~3.4.0",
-    "event-stream": "~3.1.0"
+    "mocha": "^1.18.2",
+    "should": "^3.2.0-beta1",
+    "gulp": "^3.5.6",
+    "event-stream": "^3.1.0"
   },
   "dependencies": {
-    "gulp-util": "~2.2.12"
+    "gulp-util": "^2.2.14"
   },
   "repository": {
     "type": "git",
