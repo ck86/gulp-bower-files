@@ -8,10 +8,14 @@ describe('gulpBowerFiles()', function () {
     function streamFromConfig(path, options) { 
         options = options || {};
 
-        options.paths = {
-            bowerJson: __dirname + path,
-            bowerrc: __dirname + "/.bowerrc"
-        };
+        if(!options.paths)
+            options.paths = {};
+
+        if(!options.paths.bowerJson)
+            options.paths.bowerJson = __dirname + path;
+
+        if(!options.paths.bowerrc)
+            options.paths.bowerrc = __dirname + "/.bowerrc"
         
         return gulpBowerFiles(options);
     }
@@ -55,6 +59,23 @@ describe('gulpBowerFiles()', function () {
             "/fixtures/deepPaths/lib/deeppaths.js",
             "/fixtures/decoy/decoy.js"
         ]).fromConfig("/_bower.json").when(done);
+    });
+
+    it('should select the expected files with relative path', function (done) {
+        expect([
+            "/fixtures/simple/simple.js",
+            "/fixtures/overwritten/another.js",
+            "/fixtures/multi/multi.js",
+            "/fixtures/multi/multi.css",
+            "/fixtures/hasPackageNoBower/hasPackageNoBower.js",
+            "/fixtures/deepPaths/lib/deeppaths.js",
+            "/fixtures/decoy/decoy.js"
+        ]).fromConfig("/_bower.json", {
+            paths: {
+                bowerJson: "./test/_bower.json",
+                bowerDirectory: "./test/fixtures",
+            }
+        }).when(done);
     });
 
     it("should ignore packages without any json files", function(done) {
