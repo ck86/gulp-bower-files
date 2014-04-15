@@ -112,6 +112,12 @@ describe('gulpBowerFiles()', function () {
         ]).fromConfig("/_includedev_bower.json", { includeDev: true }).when(done);    
     });
 
+    it("should get devDependencies from a bower.json with no 'dependencies' section", function(done) {
+        expect([
+            "/fixtures/includeDev/includeDev.js"
+        ]).fromConfig("/_includedev_devdepsonly_bower.json", { includeDev: true }).when(done);    
+    });
+
     it("should not load any deeper dependencies", function(done) {
         expect([
             "/fixtures/recursive/recursive.js"
