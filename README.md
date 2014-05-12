@@ -30,6 +30,10 @@ gulp.task("bower-files", function(){
 This will read your `bower.json`, iterate through your dependencies and build a `gulp.src()` with all files defined in the main property of the packages `bower.json`.
 You can override the behavior if you add an `overrides` property to your own `bower.json`. E.g.:
 
+
+
+## Options
+
 ### Bower paths
 
 ```javascript
@@ -40,8 +44,6 @@ bower({ paths : {
       }})
     .pipe(gulp.dest('client/src/lib'));
 ```
-
-## Options
 
 ### Overrides Options
 
