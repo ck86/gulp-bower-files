@@ -34,17 +34,6 @@ You can override the behavior if you add an `overrides` property to your own `bo
 
 ## Options
 
-### Bower paths
-
-```javascript
-bower({ paths : {
-         bowerDirectory : 'path/for/bower_components',
-         bowerrc : 'path/for/.bowerrc',
-         bowerJson : 'path/for/bower.json'
-      }})
-    .pipe(gulp.dest('client/src/lib'));
-```
-
 ### Overrides Options
 
 These options can be set directly in your `bower.json` file, e.g.:
@@ -115,6 +104,26 @@ You can specify for all packages a default main property which will be used if t
 Type: `String` Default: `process.env.NODE_ENV`
 
 If `process.env.NODE_ENV` is not set you can use this option.
+
+#### paths
+
+Type: `Object`
+
+You can specify the paths where the following bower specific files are located:
+`bower_components`, `.bowerrc` and `bower.json`
+
+For example:
+
+```javascript
+bowerFiles({
+    paths: {
+        bowerDirectory: 'path/for/bower_components',
+        bowerrc: 'path/for/.bowerrc',
+        bowerJson: 'path/for/bower.json'
+    }
+})
+.pipe(gulp.dest('client/src/lib'));
+```
 
 ## LICENSE
 
