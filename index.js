@@ -3,7 +3,7 @@ var path            = require("path");
 var gulp            = require("gulp");
 var gutil           = require("gulp-util");
 var PluginError     = gutil.PluginError
-var PackageManager  = require("./lib/package_collection");
+var PackageCollection  = require("./lib/package_collection");
 
 const PLUGIN_NAME = "gulp-bower-files";
 
@@ -37,9 +37,9 @@ module.exports = function(opts){
         opts.includeDev = false;
 
     try {
-        var manager = new PackageManager(opts);
-        manager.collectPackages();
-        var files = manager.getFiles();
+        var collection = new PackageCollection(opts);
+        collection.collectPackages();
+        var files = collection.getFiles();
     } catch(e) {
         throw e;
         throw new PluginError(PLUGIN_NAME, e.message);
