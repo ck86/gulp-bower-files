@@ -31,7 +31,9 @@ describe('gulpBowerFiles()', function () {
 
             stream.on("end", function(){
                 expectedFiles.should.be.eql(srcFiles);
-                done();
+                if(done) {
+                    done();
+                }
             });
 
             stream.pipe(es.map(function(file, callback){
@@ -143,5 +145,17 @@ describe('gulpBowerFiles()', function () {
         expect([
             "/fixtures/envBased/dev.js"
         ]).fromConfig("/_env_based_bower.json").when(done);
+    });
+
+    it("should not throw an exception if main file does not exists and checkExistence option is false", function() {
+        var when = expect([]).fromConfig("/_not_existing_file.json").when;
+
+        when.should.not.throw();
+    });
+
+    it("should throw an exception if main file does not exists and checkExistence option is true", function() {
+        var when = expect([]).fromConfig("/_not_existing_file.json", { checkExistence: true }).when;
+
+        when.should.throw();
     });
 });

@@ -125,6 +125,13 @@ bowerFiles({
 .pipe(gulp.dest('client/src/lib'));
 ```
 
+#### checkExistence
+
+Type: `boolean` Default: `false`
+
+Set this to true if you want that the plugin checks every file for existence. 
+If enabled and a file does not exists, the plugin will throw an exception.
+
 ## LICENSE
 
 (MIT License)
