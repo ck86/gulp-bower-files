@@ -157,4 +157,10 @@ describe('gulpBowerFiles()', function () {
 
         when.should.throw();
     });
+
+    it("should not throw an exception if there are no packages", function() {
+        var when = expect([]).fromConfig("/_empty.json").when;
+
+        when.should.not.throw();
+    });
 });

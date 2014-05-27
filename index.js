@@ -1,9 +1,10 @@
-var fs              = require("fs");
-var path            = require("path");
-var gulp            = require("gulp");
-var gutil           = require("gulp-util");
-var PluginError     = gutil.PluginError
+var fs                 = require("fs");
+var path               = require("path");
+var gulp               = require("gulp");
+var gutil              = require("gulp-util");
+var PluginError        = gutil.PluginError
 var PackageCollection  = require("./lib/package_collection");
+var logger             = require("./lib/logger");
 
 const PLUGIN_NAME = "gulp-bower-files";
 
@@ -43,6 +44,12 @@ module.exports = function(opts){
     } catch(e) {
         throw e;
         throw new PluginError(PLUGIN_NAME, e.message);
+    }
+
+    if(!files || !files.length) {
+        // @TODO: find a better way to return a stream without files
+        logger("[gulp-bower-files]\t", "no files selected");
+        return gulp.src(__dirname + '/file_that_does_not_exists');
     }
 
     return gulp.src(files, opts);
