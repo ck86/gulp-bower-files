@@ -4,8 +4,7 @@ var path = require("path");
 var should = require("should");
 
 describe('gulpBowerFiles()', function () {
-    
-    function streamFromConfig(path, options) { 
+    function streamFromConfig(path, options) {
         options = options || {};
 
         if(!options.paths)
@@ -16,7 +15,7 @@ describe('gulpBowerFiles()', function () {
 
         if(!options.paths.bowerrc)
             options.paths.bowerrc = __dirname + "/.bowerrc"
-        
+
         return gulpBowerFiles(options);
     }
 
@@ -41,7 +40,7 @@ describe('gulpBowerFiles()', function () {
                 callback();
             }));
         }
-            
+
         return {
             fromConfig: function(path, options) {
                 return {
@@ -104,20 +103,20 @@ describe('gulpBowerFiles()', function () {
         expect([
             "/fixtures/cyclic-a/cyclic-a.js",
             "/fixtures/cyclic-b/cyclic-b.js",
-        ]).fromConfig("/_cyclic_bower.json").when(done);    
+        ]).fromConfig("/_cyclic_bower.json").when(done);
     });
 
     it("should get devDependencies", function(done) {
         expect([
             "/fixtures/simple/simple.js",
             "/fixtures/includeDev/includeDev.js"
-        ]).fromConfig("/_includedev_bower.json", { includeDev: true }).when(done);    
+        ]).fromConfig("/_includedev_bower.json", { includeDev: true }).when(done);
     });
 
     it("should get devDependencies from a bower.json with no 'dependencies' section", function(done) {
         expect([
             "/fixtures/includeDev/includeDev.js"
-        ]).fromConfig("/_includedev_devdepsonly_bower.json", { includeDev: true }).when(done);    
+        ]).fromConfig("/_includedev_devdepsonly_bower.json", { includeDev: true }).when(done);
     });
 
     it("should not load any deeper dependencies", function(done) {
