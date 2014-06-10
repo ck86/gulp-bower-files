@@ -107,7 +107,7 @@ If `process.env.NODE_ENV` is not set you can use this option.
 
 #### paths
 
-Type: `Object`
+Type: `Object` or `String`
 
 You can specify the paths where the following bower specific files are located:
 `bower_components`, `.bowerrc` and `bower.json`
@@ -123,6 +123,23 @@ bowerFiles({
     }
 })
 .pipe(gulp.dest('client/src/lib'));
+```
+
+If a `String` is supplied instead, it will become the basepath for default paths.
+
+For example:
+
+```javascript
+bowerFiles({ paths: 'path/for/project' })
+.pipe(gulp.dest('client/src/lib'));
+
+/*
+    {
+        bowerDirectory: 'path/for/project/bower_components',
+        bowerrc: 'path/for/project/.bowerrc',
+        bowerJson: 'path/for/project/bower.json'
+    }
+*/
 ```
 
 #### checkExistence

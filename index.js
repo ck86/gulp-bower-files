@@ -11,12 +11,26 @@ const PLUGIN_NAME = "gulp-bower-files";
 module.exports = function(opts){
     opts = opts || {};
 
+    var defaults = {
+        paths: {
+            bowerJson     : "./bower.json",
+            bowerrc       : "./.bowerrc",
+            bowerDirectory: "./bower_components"
+        }
+    }
+
     if(!opts.paths)
         opts.paths = {}
 
-    opts.paths.bowerJson        = opts.paths.bowerJson || "./bower.json";
-    opts.paths.bowerrc          = opts.paths.bowerrc || "./.bowerrc";
-    opts.paths.bowerDirectory   = opts.paths.bowerDirectory || "./bower_components";
+    if(typeof opts.paths === 'string'){
+        opts.paths.bowerJson        = path.join(opts.paths, defaults.paths.bowerJson)
+        opts.paths.bowerrc          = path.join(opts.paths, defaults.paths.bowerrc)
+        opts.paths.bowerDirectory   = path.join(opts.paths, defaults.paths.bowerDirectory)
+    }
+
+    opts.paths.bowerJson        = opts.paths.bowerJson      || defaults.paths.bowerJson;
+    opts.paths.bowerrc          = opts.paths.bowerrc        || defaults.paths.bowerrc;
+    opts.paths.bowerDirectory   = opts.paths.bowerDirectory || defaults.paths.bowerDirectory;
 
     if(fs.existsSync(opts.paths.bowerrc)){
         opts.paths.bowerDirectory = path.dirname(opts.paths.bowerrc);
