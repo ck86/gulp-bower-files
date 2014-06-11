@@ -54,7 +54,7 @@ These options can be set directly in your `bower.json` file, e.g.:
 
 #### main
 
-Type: `String`or `Array` or `Object`
+Type: `String` or `Array` or `Object`
 
 You can specify which files should be selected. You can `gulp-bower-files` select files based on the `process.env.NODE_ENV` if you provide an `Object` with `keys` as the environment, e.g.:
 
