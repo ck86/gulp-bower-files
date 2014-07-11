@@ -9,6 +9,8 @@ var logger             = require("./lib/logger");
 const PLUGIN_NAME = "gulp-bower-files";
 
 module.exports = function(opts){
+    logger('[gulp-bower-files]', 'DEPRECATED', '', 'Please use main-bower-files (http://npmjs.org/package/main-bower-files)');
+
     opts = opts || {};
 
     var defaults = {
